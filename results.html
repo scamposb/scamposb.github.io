@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultados anteriores - EuroviLOL</title>
+	  <script src="https://cdn.tailwindcss.com"></script>
+	  <script src="script.js" defer></script> <!-- Enlace al archivo JS externo -->
+	  <link href="styles.css" rel="stylesheet">
+	  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen flex flex-col">
+    <header class="flex items-center justify-between p-4 bg-black bg-opacity-70">
+      <img src="eurovilol_blanco.png" alt="Logo" class="logo" id="logo" />
+      <nav class="space-x-6">
+        <a href="index.html" class="text-white hover:text-pink-400 font-semibold">Nueva Porra</a>
+        <a href="results.html" class="text-white hover:text-pink-400 font-semibold">Resultados anteriores</a>
+      </nav>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-center text-white p-4">
+      <h1 class="text-4xl font-bold mb-6">Resultados Anteriores</h1>
+
+      <label for="year-select" class="text-lg mb-2">¿De qué año quieres ver los resultados?</label>
+      <select id="year-select" class="text-black p-2 rounded mb-6"></select>
+
+      <div id="results-container" class="w-full max-w-4xl space-y-4"></div>
+    </main>
+
+    <footer class="text-center text-white py-4 bg-black bg-opacity-50">
+      &copy; 2025 EuroviLOL
+    </footer>
+
+  </body>
+</html>
