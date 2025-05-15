@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .filter(Boolean);
 
     try {
-      const response = await fetch(`http://192.168.1.46:8080/result/${year}`, {
+      const response = await fetch(`https://euroviapp-production.up.railway.app/result/${year}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     function fetchAllPollsAndDisplay(year) {
-      fetch(`http://192.168.1.46:8080/polls`)
+      fetch(`https://euroviapp-production.up.railway.app/polls`)
         .then((res) => res.json())
         .then((data) => {
           pollsData = data.polls || {};
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const newState = toggleButton.dataset.open === "true" ? false : true;
   
-      fetch(`http://192.168.1.46:8080/poll/${year}/is-open`, {
+      fetch(`https://euroviapp-production.up.railway.app/poll/${year}/is-open`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

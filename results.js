@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   
-    fetch("http://192.168.1.46:8080/polls")
+    fetch("https://euroviapp-production.up.railway.app/polls")
       .then((res) => res.json())
       .then((data) => {
         const polls = data.polls;

@@ -15,7 +15,7 @@ const rankingList = document.getElementById('ranking-list');
     let winnerData = null;
 
     // Poblar el selector con los años disponibles
-    fetch("http://192.168.1.46:8080/polls")
+    fetch("https://euroviapp-production.up.railway.app/polls")
       .then(res => res.json())
       .then(data => {
         const years = Object.keys(data.polls).sort().reverse();
@@ -33,7 +33,7 @@ const rankingList = document.getElementById('ranking-list');
       selectedYear = yearSelect.value;
       if (!selectedYear) return;
 
-      fetch("http://192.168.1.46:8080/polls")
+      fetch("https://euroviapp-production.up.railway.app/polls")
         .then(res => res.json())
         .then(data => {
           const isOpen = data.polls[selectedYear]?.isOpen;
@@ -41,7 +41,7 @@ const rankingList = document.getElementById('ranking-list');
             errorMessage.textContent = "La porra tiene que estar cerrada para calcular el ganador.";
             errorMessage.classList.remove("hidden");
           } else {
-            fetch(`http://192.168.1.46:8080/winner/${selectedYear}`)
+            fetch(`https://euroviapp-production.up.railway.app/winner/${selectedYear}`)
               .then(res => res.json())
               .then(winner => {
                 winnerData = winner;

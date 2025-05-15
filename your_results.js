@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!name) return;
 
     const currentYear = new Date().getFullYear();
-    const url = `http://192.168.1.46:8080/bet?year=${currentYear}&name=${encodeURIComponent(name)}`;
+    const url = `https://euroviapp-production.up.railway.app/bet?year=${currentYear}&name=${encodeURIComponent(name)}`;
 
     try {
       const response = await fetch(url);
