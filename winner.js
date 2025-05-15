@@ -1,12 +1,15 @@
 const yearSelect = document.getElementById('year-select');
-    const checkWinnerBtn = document.getElementById('check-winner');
-    const errorMessage = document.getElementById('error-message');
-    const mainContent = document.getElementById('main-content');
-    const winnerSection = document.getElementById('winner-section');
-    const countdown = document.getElementById('countdown');
-    const winnerCard = document.getElementById('winner-card');
-    const winnerName = document.getElementById('winner-name');
-    const winnerScore = document.getElementById('winner-score');
+const checkWinnerBtn = document.getElementById('check-winner');
+const errorMessage = document.getElementById('error-message');
+const mainContent = document.getElementById('main-content');
+const winnerSection = document.getElementById('winner-section');
+const countdown = document.getElementById('countdown');
+const winnerCard = document.getElementById('winner-card');
+const winnerName = document.getElementById('winner-name');
+const winnerScore = document.getElementById('winner-score');
+const showRankingBtn = document.getElementById('show-ranking');
+const rankingContainer = document.getElementById('ranking');
+const rankingList = document.getElementById('ranking-list');
 
     let selectedYear = "";
     let winnerData = null;
@@ -70,20 +73,49 @@ const yearSelect = document.getElementById('year-select');
 
     // Mostrar tarjeta del ganador con confeti
     function displayWinner() {
-      winnerName.textContent = winnerData.Name;
-      winnerScore.textContent = `con ${winnerData.Score} puntos`;
+      const [first, ...rest] = winnerData;
+      winnerName.textContent = first.Name;
+      winnerScore.textContent = `con ${first.Score} puntos`;
       winnerCard.classList.remove("hidden");
-
+    
       confetti({
         particleCount: 150,
         spread: 100,
         origin: { y: 0.6 }
       });
+    
+      showRankingBtn.classList.remove("hidden");
     }
 
-    document.getElementById("close-winner").addEventListener("click", () => {
-        winnerSection.classList.add("hidden");
-        mainContent.classList.remove("hidden");
-        countdown.classList.remove("hidden");
-        winnerCard.classList.add("hidden");
+    showRankingBtn.addEventListener("click", () => {
+      rankingList.innerHTML = "";
+    
+      let currentRank = 1;
+      let lastScore = null;
+      let displayRank = 1;
+    
+      const medalIcons = {
+        1: '🥇',
+        2: '🥈',
+        3: '🥉'
+      };
+    
+      winnerData.forEach((participant, index) => {
+        // Si la puntuación es diferente, actualizamos el rango real
+        if (participant.Score !== lastScore) {
+          displayRank = currentRank;
+          lastScore = participant.Score;
+        }
+    
+        const li = document.createElement("li");
+        const medal = medalIcons[displayRank] || `#${displayRank}`;
+        li.innerHTML = `<span class="font-semibold">${medal} ${participant.Name}</span> - ${participant.Score} puntos`;
+        rankingList.appendChild(li);
+    
+        currentRank++;
       });
+    
+      rankingContainer.classList.remove("hidden");
+      showRankingBtn.classList.add("hidden");
+    });
+    
