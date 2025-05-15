@@ -1,80 +1,43 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const yearSelect = document.getElementById("year-select");
-  const resultsContainer = document.getElementById("results-container");
-  const logo = document.getElementById("logo");
+// Función global para manejar el envío del formulario (accesible desde el HTML)
+function handleSubmit(event) {
+  event.preventDefault(); // Evita que se recargue la página
 
-  // Logo clicado
-  if (logo) {
-    logo.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-  }
+  const form = event.target;
+  const formData = new FormData(form);
 
-  // Petición a la API para obtener los resultados
-  fetch("http://localhost:8080/polls")
-    .then((res) => res.json())
-    .then((data) => {
-      // Verificar si los datos están en el formato correcto
-      if (data && data.polls) {
-        const polls = data.polls;  // Asigna correctamente a `polls`
-        const years = Object.keys(polls).sort().reverse();  // Asegúrate de ordenar los años
+  const nombre = formData.get("name");
+  const year = new Date().getFullYear();
 
-        // Rellenar el select con los años disponibles
-        yearSelect.innerHTML = "<option value='' disabled selected>Selecciona un año</option>";
-        years.forEach((year) => {
-          const option = document.createElement("option");
-          option.value = year;
-          option.textContent = year;
-          yearSelect.appendChild(option);
-        });
+  const data = {
+    winner: formData.get("winner"),
+    lastPlace: formData.get("lastPlace"),
+    spain: parseInt(formData.get("spain"), 10),
+    halfTable: parseInt(formData.get("halfTable"), 10),
+    favourite: formData.get("favourite"),
+  };
 
-        // Cargar el año guardado desde localStorage
-        const savedYear = localStorage.getItem("selectedYear");
-        if (savedYear && polls[savedYear]) {
-          yearSelect.value = savedYear;  // Restablecer la selección del año
-          showResults(savedYear, polls[savedYear]);
-        }
+  const url = `http://192.168.1.46/bet/${year}/${encodeURIComponent(nombre)}`;
 
-        // Cuando el usuario selecciona un año
-        yearSelect.addEventListener("change", () => {
-          const year = yearSelect.value;
-          localStorage.setItem("selectedYear", year);  // Guardar el año seleccionado
-          showResults(year, polls[year]);
-        });
-
-      } else {
-        throw new Error("Los datos de la API no tienen el formato esperado.");
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Error en la solicitud");
       }
+      return res.json();
+    })
+    .then((responseData) => {
+      alert("¡Apuesta enviada con éxito!");
+      console.log("Respuesta del servidor:", responseData);
+      form.reset(); // Limpia el formulario
     })
     .catch((err) => {
-      console.error("Error al cargar resultados:", err);
-      resultsContainer.innerHTML = "<p class='text-red-400'>Error al cargar los resultados. Inténtalo más tarde.</p>";
+      console.error("Error:", err);
+      alert("Hubo un error al enviar tu apuesta. Inténtalo de nuevo.");
     });
-
-  // Función para mostrar los resultados
-  function showResults(year, pollData) {
-    resultsContainer.innerHTML = `<h2 class='text-2xl font-semibold mb-4'>Apuestas del año ${year}</h2>`;
-
-    const bets = pollData.bets;
-    if (!bets || Object.keys(bets).length === 0) {
-      resultsContainer.innerHTML += "<p>No hay apuestas para este año.</p>";
-      return;
-    }
-
-    // Mostrar las apuestas
-    for (const [name, bet] of Object.entries(bets)) {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <h2>${name}</h2>
-        <p><strong>Ganador:</strong> ${bet.winner}</p>
-        <p><strong>Último lugar:</strong> ${bet.lastPlace}</p>
-        <p><strong>Posición de España:</strong> ${bet.spain}</p>
-        <p><strong>Mitad de la tabla:</strong> ${bet.halfTable === 1 ? "Primera" : "Segunda"}</p>
-        <p><strong>País favorito:</strong> ${bet.favourite}</p>
-        <p class='text-sm opacity-70'>Enviado el: ${new Date(bet.timestamp).toLocaleString()}</p>
-      `;
-      resultsContainer.appendChild(card);
-    }
-  }
-});
+}

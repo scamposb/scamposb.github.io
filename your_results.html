@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tus Resultados - EuroviLOL</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="your_results.js" defer></script>
+  <link href="styles.css" rel="stylesheet" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen flex flex-col">
+  <header class="flex items-center justify-between p-4 bg-black bg-opacity-70">
+    <img src="eurovilol_blanco.png" alt="Logo" class="logo" id="logo" />
+    <nav class="space-x-6">
+      <a href="index.html" class="text-white hover:text-pink-400 font-semibold">Nueva Porra</a>
+      <a href="results.html" class="text-white hover:text-pink-400 font-semibold">Resultados anteriores</a>
+      <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold">Tus resultados</a>
+    </nav>
+  </header>
+
+  <main class="flex-grow flex flex-col items-center justify-start text-white p-4 mt-10">
+    <h1 class="text-4xl font-bold mb-6">Ver tus resultados</h1>
+
+    <form id="your-results-form" class="flex flex-col items-center mb-6">
+      <label for="name-input" class="text-lg mb-2">Introduce tu nombre:</label>
+      <input id="name-input" type="text" class="text-black p-2 rounded mb-4 w-64 text-center" placeholder="Tu nombre" required>
+      <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">Ver resultados</button>
+    </form>
+
+    <div id="your-results-container" class="w-full max-w-4xl space-y-4"></div>
+  </main>
+
+  <footer class="text-center text-white py-4 bg-black bg-opacity-50">
+    &copy; 2025 EuroviLOL
+  </footer>
+</body>
+</html>
