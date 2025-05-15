@@ -10,26 +10,26 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen text-white p-4">
-  <main class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold mb-4">Panel de administración</h1>
-
-    <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 mb-4">
-      <label for="year-select" class="block mb-2 font-semibold">Selecciona un año:</label>
-      <select id="year-select" class="w-full text-black p-2 rounded">
-        <option value="">-- Selecciona un año --</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-      </select>
-
-      <div class="mt-4">
-        <p class="text-lg">Estado de la votación: <span id="is-open-status"></span></p>
-        <button id="toggle-open" class="mt-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded"></button>
+    <main class="max-w-3xl mx-auto">
+      <h1 class="text-3xl font-bold mb-4">Panel de administración</h1>
+  
+      <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 mb-4">
+        <label for="year-select" class="block mb-2 font-semibold">Selecciona un año:</label>
+        <select id="year-select" class="w-full text-black p-2 rounded">
+          <option value="">-- Selecciona un año --</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+        </select>
+  
+        <div class="mt-4">
+          <p class="text-lg">Estado de la votación: <span id="is-open-status"></span></p>
+          <button id="toggle-open" class="mt-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded hidden"></button>
+        </div>
       </div>
-    </div>
-
-    <div id="results" class="space-y-2"></div>
-    <div id="message" class="mt-4 text-lg font-semibold"></div>
-  </main>
-</body>
+  
+      <div id="results" class="space-y-2"></div>
+      <div id="message" class="mt-4 text-lg font-semibold"></div>
+    </main>
+  </body>
 </html>
