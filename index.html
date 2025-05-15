@@ -2,65 +2,65 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eurovisión Porra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nueva Porra - EuroviLOL</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="script.js" defer></script> <!-- Enlace al archivo JS externo -->
-  <link href="styles.css" rel="stylesheet">
+  <script src="script.js" defer></script>
+  <link href="styles.css" rel="stylesheet" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
-<body class="bg-[#0e0e2c] text-white font-sans min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-[#1c1c3c] p-4 flex items-center justify-between shadow-md">
-    <div class="flex items-center space-x-4">
-      <!-- Logo ajustado para mantener proporciones y hacerlo más grande en móvil -->
-      <img src="eurovilol_blanco.png" alt="Eurolol Logo" class="logo"/>
-    </div>
-    <nav class="space-x-4 flex items-center">
-	  <a href="index.html" id="new-bet-link" class="text-white hover:text-pink-400 font-semibold px-2 py-1">Nueva Apuesta</a>
-	  <a href="results.html" class="text-white hover:text-gray-300 transition-colors">Resultados anteriores</a>
-	  <!--<a href="#" class="text-white hover:text-pink-400 font-semibold">Resultados anteriores</a>-->
-	  <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold">Ver tus resultados</a>
-	</nav>
+<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen flex flex-col">
+  <header class="flex items-center justify-between p-4 bg-black bg-opacity-70">
+    <img src="eurovilol_blanco.png" alt="Logo" class="logo" id="logo" />
+    <nav class="space-x-6">
+      <a href="index.html" class="text-white hover:text-pink-400 font-semibold">Nueva Porra</a>
+      <a href="results.html" class="text-white hover:text-pink-400 font-semibold">Resultados anteriores</a>
+      <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold">Tus resultados</a>
+    </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-grow flex items-center justify-center p-6">
-    <form class="bg-white text-black p-6 rounded-2xl shadow-lg w-full max-w-lg space-y-4" onsubmit="handleSubmit(event)">
-      <h2 class="text-2xl font-bold mb-4 text-center">Nueva Apuesta</h2>
-      <input type="text" name="name" placeholder="Tu nombre" class="w-full p-2 border rounded-md" required />
-      <input type="text" name="winner" placeholder="¿Qué país ganará?" class="w-full p-2 border rounded-md" required />
-      <input type="text" name="lastPlace" placeholder="¿Qué país quedará último?" class="w-full p-2 border rounded-md" required />
-      <input type="number" name="spain" placeholder="¿En qué puesto quedará España?" class="w-full p-2 border rounded-md" required />
-      <select name="halfTable" class="w-full p-2 border rounded-md" required>
-        <option value="">¿Mitad superior o inferior?</option>
-        <option value="1">Mitad superior</option>
-        <option value="2">Mitad inferior</option>
+  <main class="flex-grow flex flex-col items-center justify-start text-white p-4 mt-10">
+    <h1 class="text-4xl font-bold mb-6">Haz tu apuesta</h1>
+
+    <form id="bet-form" class="flex flex-col items-center space-y-4 w-full max-w-md">
+      <input id="name" name="name" type="text" placeholder="Tu nombre" class="w-full text-black p-2 rounded" required />
+
+      <input id="winner" name="winner" type="text" placeholder="Ganador" class="w-full text-black p-2 rounded" required />
+      <input id="lastPlace" name="lastPlace" type="text" placeholder="Último puesto" class="w-full text-black p-2 rounded" required />
+      <input id="spain" name="spain" type="number" placeholder="Puesto de España" class="w-full text-black p-2 rounded" required />
+
+      <select id="halfTable" name="halfTable" class="w-full text-black p-2 rounded" required>
+        <option value="">Mitad de la tabla</option>
+        <option value="1">Primera mitad</option>
+        <option value="2">Segunda mitad</option>
       </select>
-      <input type="text" name="favourite" placeholder="¿Cuál es tu país favorito?" id="paisFavorito" class="w-full p-2 border rounded-md" required />
-      <button type="submit" class="w-full bg-[#f72585] text-white py-2 rounded-md hover:bg-[#d61b72] transition">Enviar apuesta</button>
+
+      <input id="favourite" name="favourite" type="text" placeholder="Favorito personal" class="w-full text-black p-2 rounded" required />
+
+      <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded w-full">Enviar apuesta</button>
     </form>
+
+    <div id="message" class="mt-6 text-lg font-semibold opacity-0 transform translate-y-2 transition-all duration-500"></div>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-[#1c1c3c] text-center text-sm text-gray-400 py-4">
-    &copy; 2025 EuroviLOL. Todos los derechos reservados.
+  <footer class="text-center text-white py-4 bg-black bg-opacity-50">
+    &copy; 2025 EuroviLOL
   </footer>
 
   <!-- Modal de imagen de Francia -->
-  <div id="franceModal" class="modal">
-    <div class="modal-content">
-      <img id="franceImg" src="" alt="Imagen de Francia"/>
-    </div>
+<div id="franceModal" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="modal-content bg-white p-4 rounded">
+    <img id="franceImg" src="" alt="Imagen de Francia" />
   </div>
+</div>
 
-  <!-- Modal de advertencia de Israel -->
-  <div id="israelModal" class="modal">
-    <div class="modal-content">
-      <div class="message">
-        No apoyamos a países genocidas, inténtalo de nuevo.
-      </div>
+<!-- Modal de advertencia de Israel -->
+<div id="israelModal" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="modal-content bg-white p-4 rounded">
+    <div class="message text-red-600 font-bold text-lg">
+      No apoyamos a países genocidas, inténtalo de nuevo.
     </div>
   </div>
+</div>
 </body>
 </html>

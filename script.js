@@ -1,6 +1,10 @@
-// Función global para manejar el envío del formulario (accesible desde el HTML)
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("bet-form");
+  form.addEventListener("submit", handleSubmit);
+});
+
 function handleSubmit(event) {
-  event.preventDefault(); // Evita que se recargue la página
+  event.preventDefault();
 
   const form = event.target;
   const formData = new FormData(form);
@@ -8,15 +12,45 @@ function handleSubmit(event) {
   const nombre = formData.get("name");
   const year = new Date().getFullYear();
 
+  const favouriteRaw = formData.get("favourite");
+  const favourite = (favouriteRaw || "").toLowerCase();
+
+  // Easter eggs
+  if (favourite === "francia") {
+    const franceModal = document.getElementById("franceModal");
+    const franceImg = document.getElementById("franceImg");
+
+    franceImg.src = `gatito.jpg`;
+    franceModal.classList.remove("hidden");
+
+    setTimeout(() => {
+      franceModal.classList.add("hidden");
+    }, 4000);
+
+    return; // Cancelar el envío para Francia también
+  }
+
+  if (favourite === "israel") {
+    const israelModal = document.getElementById("israelModal");
+    israelModal.classList.remove("hidden");
+
+    setTimeout(() => {
+      israelModal.classList.add("hidden");
+    }, 4000);
+    return;
+  }
+
   const data = {
     winner: formData.get("winner"),
     lastPlace: formData.get("lastPlace"),
     spain: parseInt(formData.get("spain"), 10),
     halfTable: parseInt(formData.get("halfTable"), 10),
-    favourite: formData.get("favourite"),
+    favourite: favouriteRaw,
   };
 
-  const url = `http://192.168.1.46/bet/${year}/${encodeURIComponent(nombre)}`;
+  const url = `http://192.168.1.46:8080/bet/${year}/${encodeURIComponent(nombre)}`;
+
+
 
   fetch(url, {
     method: "POST",
@@ -32,12 +66,30 @@ function handleSubmit(event) {
       return res.json();
     })
     .then((responseData) => {
-      alert("¡Apuesta enviada con éxito!");
-      console.log("Respuesta del servidor:", responseData);
-      form.reset(); // Limpia el formulario
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = "✅ ¡Apuesta enviada con éxito!";
+      messageDiv.classList.remove("opacity-0", "translate-y-2");
+      messageDiv.classList.add("opacity-100", "translate-y-0");
+
+      // Reiniciar formulario
+      form.reset();
+
+      // Ocultar mensaje tras 4 segundos
+      setTimeout(() => {
+        messageDiv.classList.add("opacity-0", "translate-y-2");
+        messageDiv.classList.remove("opacity-100", "translate-y-0");
+      }, 4000);
     })
     .catch((err) => {
       console.error("Error:", err);
-      alert("Hubo un error al enviar tu apuesta. Inténtalo de nuevo.");
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = "❌ Hubo un error al enviar la apuesta.";
+      messageDiv.classList.remove("opacity-0", "translate-y-2");
+      messageDiv.classList.add("opacity-100", "translate-y-0");
+
+      setTimeout(() => {
+        messageDiv.classList.add("opacity-0", "translate-y-2");
+        messageDiv.classList.remove("opacity-100", "translate-y-0");
+      }, 4000);
     });
 }
