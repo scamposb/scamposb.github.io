@@ -24,9 +24,9 @@
   </header>  
 
   <!-- Contenido principal -->
-  <main class="flex-grow flex flex-col items-center justify-start text-white p-4 mt-10">
+  <main class="flex-grow flex flex-col items-center justify-center text-white p-4">
     <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 w-full max-w-md shadow-lg flex flex-col space-y-4">
-      <h1 class="text-3xl font-bold text-white mb-2">Calcular ganador</h1>
+    <h1 class="text-3xl font-bold mb-4 text-center w-full">Calcular ganador</h1>
 
       <label for="year-select" class="text-white font-semibold">Selecciona un año:</label>
       <select id="year-select" class="w-full text-black p-2 rounded">
@@ -41,7 +41,7 @@
         </button>
       </div>
 
-      <div id="winner-display" class="hidden mt-4"></div>
+      <div id="winner-display" class="hidden flex flex-col items-center justify-center text-center mt-10 space-y-4"></div>
     </div>
   </main>
 
@@ -51,5 +51,7 @@
 
   <!-- Script DEFER -->
   <script src="winner.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 </body>
 </html>

@@ -1,80 +1,89 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const yearSelect = document.getElementById("year-select");
-    const winnerSection = document.getElementById("winner-section");
-    const revealButton = document.getElementById("reveal-winner");
-    const winnerDisplay = document.getElementById("winner-display");
     const errorMessage = document.getElementById("error-message");
+    const winnerSection = document.getElementById("winner-section");
+    const revealBtn = document.getElementById("reveal-winner");
+    const winnerDisplay = document.getElementById("winner-display");
   
-    let selectedYear = null;
     let winnerData = null;
-    let allPolls = {};
   
-    // Cargar años disponibles desde /polls
-    fetch("http://192.168.1.46:8080/polls")
-      .then((res) => res.json())
-      .then((data) => {
-        allPolls = data.polls;
+    // Obtener años
+    try {
+      const response = await fetch("http://192.168.1.46:8080/polls");
+      const data = await response.json();
+      const years = Object.keys(data.polls).sort().reverse();
   
-        const years = Object.keys(allPolls).sort((a, b) => b - a); // Años descendentes
-        years.forEach((year) => {
-          const option = document.createElement("option");
-          option.value = year;
-          option.textContent = year;
-          yearSelect.appendChild(option);
-        });
-      })
-      .catch((err) => {
-        console.error("Error cargando los años:", err);
-        errorMessage.textContent = "Error cargando los años disponibles.";
+      years.forEach((year) => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
       });
   
-    // Al cambiar el año
-    yearSelect.addEventListener("change", () => {
-      selectedYear = yearSelect.value;
-      winnerSection.classList.add("hidden");
-      winnerDisplay.classList.add("hidden");
-      winnerDisplay.innerHTML = "";
-      errorMessage.textContent = "";
+      yearSelect.addEventListener("change", async () => {
+        const year = yearSelect.value;
+        errorMessage.textContent = "";
+        winnerDisplay.classList.add("hidden");
+        winnerDisplay.innerHTML = "";
+        winnerSection.classList.add("hidden");
   
-      if (!selectedYear) return;
+        if (!year) return;
   
-      const selectedPoll = allPolls[selectedYear];
-      if (!selectedPoll) {
-        errorMessage.textContent = "No se encontró la porra para ese año.";
-        return;
-      }
+        const isOpen = data.polls[year].isOpen;
+        if (isOpen) {
+          errorMessage.textContent = "La porra debe estar cerrada para calcular el ganador.";
+          return;
+        }
   
-      if (selectedPoll.isOpen) {
-        errorMessage.textContent =
-          "La porra debe estar cerrada para calcular el ganador.";
-        return;
-      }
+        const res = await fetch(`http://192.168.1.46:8080/winner/${year}`);
+        winnerData = await res.json();
+        winnerSection.classList.remove("hidden");
+      });
   
-      // La porra está cerrada, podemos obtener el ganador
-      fetch(`http://192.168.1.46:8080/winner/${selectedYear}`)
-        .then((res) => res.json())
-        .then((data) => {
-          winnerData = data;
-          winnerSection.classList.remove("hidden");
-        })
-        .catch((err) => {
-          errorMessage.textContent =
-            "Error al obtener el ganador. Intenta de nuevo.";
-          console.error(err);
-        });
-    });
+      revealBtn.addEventListener("click", async () => {
+        // Ocultar todo
+        document.querySelector("select").classList.add("hidden");
+        winnerSection.classList.add("hidden");
+        errorMessage.classList.add("hidden");
   
-    // Mostrar el resultado al presionar el botón
-    revealButton.addEventListener("click", () => {
-      if (winnerData) {
-        winnerDisplay.innerHTML = `
-          <div class="mt-4 p-4 rounded-lg bg-green-800/70 border border-white/20 text-white text-center">
-            <p class="text-xl font-semibold">🏆 Ganador: ${winnerData.Name}</p>
-            <p class="text-lg mt-2">Puntuación: ${winnerData.Score}</p>
-          </div>
-        `;
+        // Crear cuenta atrás
+        const countdownEl = document.createElement("div");
+        countdownEl.className = "text-6xl font-bold animate-pulse transition-all duration-1000";
+        countdownEl.id = "countdown";
+        winnerDisplay.innerHTML = "";
         winnerDisplay.classList.remove("hidden");
-      }
-    });
+        winnerDisplay.appendChild(countdownEl);
+  
+        for (let i = 5; i >= 1; i--) {
+          countdownEl.textContent = i;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+  
+        // Mostrar ganador
+        countdownEl.remove();
+  
+        const nameEl = document.createElement("div");
+        nameEl.className = "text-4xl font-extrabold text-pink-400 mb-2 animate-bounce";
+        nameEl.textContent = `🎉 ${winnerData.Name} 🎉`;
+  
+        const scoreEl = document.createElement("div");
+        scoreEl.className = "text-2xl";
+        scoreEl.textContent = `Puntuación: ${winnerData.Score}`;
+  
+        winnerDisplay.appendChild(nameEl);
+        winnerDisplay.appendChild(scoreEl);
+  
+        // Confeti
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 },
+        });
+      });
+  
+    } catch (error) {
+      errorMessage.textContent = "Error al cargar los datos.";
+      console.error(error);
+    }
   });
   
