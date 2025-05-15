@@ -20,25 +20,28 @@
   </header>
 
   <main class="flex-grow flex flex-col items-center justify-start text-white p-4 mt-10">
-    <h1 class="text-4xl font-bold mb-6">Haz tu apuesta</h1>
-
-    <form id="bet-form" class="flex flex-col items-center space-y-4 w-full max-w-md">
-      <input id="name" name="name" type="text" placeholder="Tu nombre" class="w-full text-black p-2 rounded" required />
-
-      <input id="winner" name="winner" type="text" placeholder="Ganador" class="w-full text-black p-2 rounded" required />
-      <input id="lastPlace" name="lastPlace" type="text" placeholder="Último puesto" class="w-full text-black p-2 rounded" required />
-      <input id="spain" name="spain" type="number" placeholder="Puesto de España" class="w-full text-black p-2 rounded" required />
-
-      <select id="halfTable" name="halfTable" class="w-full text-black p-2 rounded" required>
-        <option value="">Mitad de la tabla</option>
-        <option value="1">Primera mitad</option>
-        <option value="2">Segunda mitad</option>
-      </select>
-
-      <input id="favourite" name="favourite" type="text" placeholder="Favorito personal" class="w-full text-black p-2 rounded" required />
-
-      <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded w-full">Enviar apuesta</button>
-    </form>
+    <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 w-full max-w-md shadow-lg flex flex-col items-center space-y-4">
+      <h1 class="text-4xl font-bold text-white mb-2">Haz tu apuesta</h1>
+    
+      <form id="bet-form" class="flex flex-col items-center space-y-4 w-full">
+        <input id="name" name="name" type="text" placeholder="Tu nombre" class="w-full text-black p-2 rounded" required />
+    
+        <input id="winner" name="winner" type="text" placeholder="Ganador" class="w-full text-black p-2 rounded" required />
+        <input id="lastPlace" name="lastPlace" type="text" placeholder="Último puesto" class="w-full text-black p-2 rounded" required />
+        <input id="spain" name="spain" type="number" placeholder="Puesto de España" class="w-full text-black p-2 rounded" required />
+    
+        <select id="halfTable" name="halfTable" class="w-full text-black p-2 rounded" required>
+          <option value="">Mitad de la tabla</option>
+          <option value="1">Primera mitad</option>
+          <option value="2">Segunda mitad</option>
+        </select>
+    
+        <input id="favourite" name="favourite" type="text" placeholder="Favorito personal" class="w-full text-black p-2 rounded" required />
+    
+        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded w-full">Enviar apuesta</button>
+      </form>
+    </div>
+    
 
     <div id="message" class="mt-6 text-lg font-semibold opacity-0 transform translate-y-2 transition-all duration-500"></div>
   </main>

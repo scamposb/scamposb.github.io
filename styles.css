@@ -95,3 +95,11 @@ select {
 .card p {
   margin-bottom: 0.25rem;
 }
+
+.bg-card {
+  background-color: rgba(255, 255, 255, 0.1); /* blanco translúcido */
+  backdrop-filter: blur(8px); /* efecto cristal */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem; /* esquinas redondeadas */
+  padding: 1rem;
+}

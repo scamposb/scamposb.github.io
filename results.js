@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
       for (const [name, bet] of Object.entries(bets)) {
         const card = document.createElement("div");
-        card.className = "bg-white text-black p-4 rounded-lg shadow-md";
+        card.className = "bg-card text-white shadow-lg p-4 rounded-lg mb-4";
         card.innerHTML = `
           <h3 class="text-xl font-bold mb-2">${name}</h3>
           <p><strong>Ganador:</strong> ${bet.winner}</p>

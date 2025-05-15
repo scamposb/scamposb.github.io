@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       resultContainer.innerHTML = `
-        <div class="bg-white text-black p-4 rounded shadow">
+        <div class="bg-card text-white shadow-lg p-4 rounded-lg mb-4">
           <h2 class="text-xl font-bold mb-2">Resultados de ${name} (${currentYear})</h2>
           <ul class="list-disc pl-5">
             <li><strong>Ganador:</strong> ${bet.winner}</li>
