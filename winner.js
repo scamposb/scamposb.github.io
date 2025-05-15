@@ -90,9 +90,11 @@ const rankingList = document.getElementById('ranking-list');
     showRankingBtn.addEventListener("click", () => {
       rankingList.innerHTML = "";
     
+      const sortedData = [...winnerData].sort((a, b) => b.Score - a.Score);
+    
       let currentRank = 1;
+      let displayedRank = 1;
       let lastScore = null;
-      let displayRank = 1;
     
       const medalIcons = {
         1: '🥇',
@@ -100,16 +102,20 @@ const rankingList = document.getElementById('ranking-list');
         3: '🥉'
       };
     
-      winnerData.forEach((participant, index) => {
-        // Si la puntuación es diferente, actualizamos el rango real
+      sortedData.forEach((participant, index) => {
         if (participant.Score !== lastScore) {
-          displayRank = currentRank;
-          lastScore = participant.Score;
+          displayedRank = currentRank;
         }
     
+        lastScore = participant.Score;
+    
         const li = document.createElement("li");
-        const medal = medalIcons[displayRank] || `#${displayRank}`;
-        li.innerHTML = `<span class="font-semibold">${medal} ${participant.Name}</span> - ${participant.Score} puntos`;
+    
+        // Solo mostrar medalla si está en el top 3
+        const medal = medalIcons[displayedRank] || '';
+        const prefix = medal ? `${medal} ` : '';
+    
+        li.innerHTML = `<span class="font-semibold">${prefix}${participant.Name}</span> - ${participant.Score} puntos`;
         rankingList.appendChild(li);
     
         currentRank++;
@@ -117,5 +123,17 @@ const rankingList = document.getElementById('ranking-list');
     
       rankingContainer.classList.remove("hidden");
       showRankingBtn.classList.add("hidden");
+    });
+    
+    
+    
+    document.getElementById("close-winner").addEventListener("click", () => {
+      winnerSection.classList.add("hidden");
+      mainContent.classList.remove("hidden");
+      countdown.classList.remove("hidden");
+      countdown.textContent = "";
+      winnerCard.classList.add("hidden");
+      rankingContainer.classList.add("hidden");
+      showRankingBtn.classList.remove("hidden");
     });
     
