@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - EuroviLOL</title>
+  <title>Panel de Administración - EuroviLOL</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="admin.js" defer></script>
   <link href="styles.css" rel="stylesheet" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
-<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen flex flex-col text-white">
+<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen text-white flex flex-col">
+
   <header class="p-4 bg-black bg-opacity-70 flex items-center justify-between flex-nowrap gap-4">
     <div class="flex-shrink-0">
       <img src="eurovilol_blanco.png" alt="Logo" class="w-[6.4rem] sm:w-32 h-auto" id="logo" />
@@ -20,38 +20,63 @@
         <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold px-3 border-r border-white/30 break-words max-w-[120px] text-center">Tus resultados</a>
         <a href="winner.html" class="text-white hover:text-pink-400 font-semibold px-3 break-words max-w-[110px] text-center">Calcular ganador</a>
       </nav>
-  </header>
+  </header> 
 
-  <main class="flex-grow max-w-3xl mx-auto w-full p-4 mt-10">
-    <h1 class="text-3xl font-bold mb-4">Panel de administración</h1>
+  <main class="flex-grow p-4 flex flex-col items-center text-center">
+    <h1 class="text-3xl font-bold mb-6">Panel de Administración</h1>
 
-    <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 mb-4">
-      <label for="year-select" class="block mb-2 font-semibold">Selecciona un año:</label>
-      <select id="year-select" class="w-full text-black p-2 rounded">
-        <option value="">-- Selecciona un año --</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-      </select>
-
-      <div class="mt-4">
-        <p class="text-lg">Estado de la votación: <span id="is-open-status"></span></p>
-        <button id="toggle-open" class="mt-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded hidden"></button>
-      </div>
+    <div class="flex flex-wrap gap-4 justify-center mb-6">
+      <button id="manage-votes-btn" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded font-semibold">Gestionar votaciones</button>
+      <button id="add-results-btn" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded font-semibold">Añadir resultados</button>
     </div>
 
-    <div id="results" class="space-y-2"></div>
+    <!-- Sección de gestión de votaciones -->
+    <section id="vote-management" class="hidden w-full max-w-md bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
+      <h2 class="text-xl font-bold mb-4">Gestión de Votaciones</h2>
+      <!-- Aquí se colocaría el contenido actual para abrir/cerrar votación -->
+      <p class="text-white">
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg border border-white/20 mb-4">
+          <label for="year-select" class="block mb-2 font-semibold">Selecciona un año:</label>
+          <select id="year-select" class="w-full text-black p-2 rounded">
+            <option value="">-- Selecciona un año --</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+    
+          <div class="mt-4">
+            <p class="text-lg">Estado de la votación: <span id="is-open-status"></span></p>
+            <button id="toggle-open" class="mt-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded hidden"></button>
+          </div>
+        </div>
+    
+        <div id="results" class="space-y-2"></div>
+    
+        <div id="bets-results" class="mt-8 hidden">
+          <h2 class="text-2xl font-bold mb-4">Apuestas de los participantes</h2>
+          <div id="bets-list" class="space-y-4"></div>
+        </div>
+    
+        <div id="message" class="mt-4 text-lg font-semibold"></div>
+      </p>
+    </section>
 
-    <div id="bets-results" class="mt-8 hidden">
-      <h2 class="text-2xl font-bold mb-4">Apuestas de los participantes</h2>
-      <div id="bets-list" class="space-y-4"></div>
-    </div>
-
-    <div id="message" class="mt-4 text-lg font-semibold"></div>
+    <!-- Sección para añadir resultados -->
+    <section id="add-result-section" class="hidden w-full max-w-md bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
+      <h2 class="text-xl font-bold mb-4">Añadir Resultados</h2>
+      <form id="result-form" class="flex flex-col gap-4">
+        <input type="number" id="year" placeholder="Año" class="p-2 rounded text-black" required />
+        <input type="text" id="winner" placeholder="Ganador" class="p-2 rounded text-black" required />
+        <input type="text" id="lastPlace" placeholder="Último lugar" class="p-2 rounded text-black" required />
+        <input type="number" id="spain" placeholder="Posición de España" class="p-2 rounded text-black" required />
+        <input type="number" id="halfTable" placeholder="Mitad de tabla de España" class="p-2 rounded text-black" required />
+        <textarea id="top10" placeholder="Top 10 (separado por comas)" class="p-2 rounded text-black" required></textarea>
+        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-4 py-2 rounded">Enviar Resultados</button>
+        <div id="result-msg" class="text-green-400 font-semibold hidden mt-2"></div>
+      </form>
+    </section>
   </main>
 
-  <footer class="text-center text-white py-4 bg-black bg-opacity-50">
-    &copy; 2025 EuroviLOL
-  </footer>
+  <script src="admin.js" defer></script>
 </body>
 </html>

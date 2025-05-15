@@ -1,11 +1,70 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const yearSelect = document.getElementById("year-select");
-    const resultsContainer = document.getElementById("results");
-    const isOpenStatus = document.getElementById("is-open-status");
-    const toggleButton = document.getElementById("toggle-open");
-    const message = document.getElementById("message");
-    const betsList = document.getElementById("bets-list");
-    const betsContainer = document.getElementById("bets-results");
+document.addEventListener('DOMContentLoaded', () => {
+  const manageVotesBtn = document.getElementById('manage-votes-btn');
+  const addResultsBtn = document.getElementById('add-results-btn');
+  const voteSection = document.getElementById('vote-management');
+  const addResultSection = document.getElementById('add-result-section');
+  const form = document.getElementById('result-form');
+  const resultMsg = document.getElementById('result-msg');
+  const yearSelect = document.getElementById("year-select");
+  const resultsContainer = document.getElementById("results");
+  const isOpenStatus = document.getElementById("is-open-status");
+  const toggleButton = document.getElementById("toggle-open");
+  const message = document.getElementById("message");
+  const betsList = document.getElementById("bets-list");
+  const betsContainer = document.getElementById("bets-results");
+
+  if (!manageVotesBtn || !addResultsBtn || !voteSection || !addResultSection || !form || !resultMsg) {
+    console.error('Uno o más elementos no se encontraron en el DOM.');
+    return;
+  }
+
+  manageVotesBtn.addEventListener('click', () => {
+    voteSection.classList.remove('hidden');
+    addResultSection.classList.add('hidden');
+  });
+
+  addResultsBtn.addEventListener('click', () => {
+    addResultSection.classList.remove('hidden');
+    voteSection.classList.add('hidden');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const year = document.getElementById('year').value;
+    const winner = document.getElementById('winner').value.trim();
+    const lastPlace = document.getElementById('lastPlace').value.trim();
+    const spain = parseInt(document.getElementById('spain').value);
+    const halfTable = parseInt(document.getElementById('halfTable').value);
+    const top10 = document.getElementById('top10').value
+      .split(',')
+      .map(p => p.trim())
+      .filter(Boolean);
+
+    try {
+      const response = await fetch(`http://192.168.1.46:8080/result/${year}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ winner, lastPlace, spain, halfTable, top10 })
+      });
+
+      if (response.ok) {
+        resultMsg.textContent = '¡Resultados añadidos correctamente!';
+        resultMsg.classList.remove('hidden', 'text-red-400');
+        resultMsg.classList.add('text-green-400');
+      } else {
+        resultMsg.textContent = 'Error al añadir resultados';
+        resultMsg.classList.remove('hidden', 'text-green-400');
+        resultMsg.classList.add('text-red-400');
+      }
+    } catch (error) {
+      resultMsg.textContent = 'Error de conexión con el servidor';
+      resultMsg.classList.remove('hidden', 'text-green-400');
+      resultMsg.classList.add('text-red-400');
+    }
+  });
   
     let pollsData = {};
     let messageTimeout;
@@ -140,5 +199,4 @@ document.addEventListener("DOMContentLoaded", () => {
           messageTimeout = setTimeout(clearMessage, 4000);
         });
     });
-  });
-  
+});
