@@ -3,55 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calcular Ganador - EuroviLOL</title>
+  <title>Calcular ganador - EuroviLOL</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link href="styles.css" rel="stylesheet" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
-<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-pink-900 to-purple-900 min-h-screen text-white flex flex-col">
+    <header class="p-4 bg-black bg-opacity-70 flex items-center justify-between flex-nowrap gap-4">
+        <div class="flex-shrink-0">
+          <img src="eurovilol_blanco.png" alt="Logo" class="w-[6.4rem] sm:w-32 h-auto" id="logo" />
+        </div>
+        <nav class="flex flex-nowrap justify-end gap-1 text-xs sm:text-base min-w-0 flex-grow">
+            <a href="index.html" class="text-white hover:text-pink-400 font-semibold px-3 border-r border-white/30 break-words max-w-[100px] text-center">Nueva Porra</a>
+            <a href="results.html" class="text-white hover:text-pink-400 font-semibold px-3 border-r border-white/30 break-words max-w-[130px] text-center">Resultados anteriores</a>
+            <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold px-3 border-r border-white/30 break-words max-w-[120px] text-center">Tus resultados</a>
+            <a href="winner.html" class="text-white hover:text-pink-400 font-semibold px-3 break-words max-w-[110px] text-center">Calcular ganador</a>
+          </nav>
+      </header>
 
-  <!-- Header compartido -->
-  <header class="flex items-center justify-between p-4 bg-black bg-opacity-70">
-    <div class="transform scale-[2] origin-left -translate-y-2 mt-2">
-      <img src="eurovilol_blanco.png" alt="Logo" class="w-16 h-auto" id="logo" />
-    </div>
-    <nav class="space-x-6">
-      <a href="index.html" class="text-white hover:text-pink-400 font-semibold">Nueva Porra</a>
-      <a href="results.html" class="text-white hover:text-pink-400 font-semibold">Resultados anteriores</a>
-      <a href="your_results.html" class="text-white hover:text-pink-400 font-semibold">Tus resultados</a>
-      <a href="winner.html" class="text-white hover:text-pink-400 font-semibold">Calcular ganador</a>
-    </nav>
-  </header>  
+  <!-- Main -->
+  <main class="flex-grow flex flex-col items-center justify-start p-4 mt-10 text-center" id="main-content">
+    <h1 class="text-4xl font-bold mb-6 w-full text-center">Calcular ganador</h1>
 
-  <!-- Contenido principal -->
-  <main class="flex-grow flex flex-col items-center justify-center text-white p-4">
-    <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 w-full max-w-md shadow-lg flex flex-col space-y-4">
-    <h1 class="text-3xl font-bold mb-4 text-center w-full">Calcular ganador</h1>
-
-      <label for="year-select" class="text-white font-semibold">Selecciona un año:</label>
-      <select id="year-select" class="w-full text-black p-2 rounded">
+    <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 w-full max-w-md">
+      <label for="year-select" class="block mb-2 font-semibold text-white">Selecciona un año:</label>
+      <select id="year-select" class="w-full text-black p-2 rounded mb-4">
         <option value="">-- Selecciona un año --</option>
       </select>
-
-      <p id="error-message" class="text-red-400 font-semibold mt-2"></p>
-
-      <div id="winner-section" class="hidden mt-4 text-center">
-        <button id="reveal-winner" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded">
-          Conocer el resultado
-        </button>
-      </div>
-
-      <div id="winner-display" class="hidden flex flex-col items-center justify-center text-center mt-10 space-y-4"></div>
+      <button id="check-winner" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded w-full">Conocer el resultado</button>
     </div>
+
+    <div id="error-message" class="text-red-400 mt-4 font-semibold hidden"></div>
   </main>
 
-  <footer class="text-center text-white py-4 bg-black bg-opacity-50">
-    &copy; 2025 EuroviLOL
-  </footer>
+  <!-- Pantalla de resultado a pantalla completa -->
+    <div id="winner-section" class="hidden fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-pink-900 to-purple-900 z-50">
 
-  <!-- Script DEFER -->
+    <!-- Botón de cerrar -->
+    <button id="close-winner" class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-pink-400">✖</button>
+  
+    <div id="countdown" class="text-8xl font-bold animate-pulse"></div>
+  
+    <div id="winner-card" class="hidden bg-white/10 backdrop-blur-md p-8 rounded-2xl text-center border border-white/20 max-w-2xl w-full mx-4">
+      <h2 class="text-4xl font-bold mb-4">🎉 El ganador es...</h2>
+      <p id="winner-name" class="text-5xl font-bold text-pink-400 animate-bounce mb-2"></p>
+      <p id="winner-score" class="text-xl mb-4">con X puntos</p>
+      <img src="https://i0.wp.com/justmaths.co.uk/wp-content/uploads/2016/10/celebration-gif.gif" alt="Celebración" class="mx-auto w-72 rounded-lg shadow-lg">
+    </div>
+  </div>
+
   <script src="winner.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 </body>
 </html>
