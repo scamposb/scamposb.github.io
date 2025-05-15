@@ -20,7 +20,7 @@ function handleSubmit(event) {
     const franceModal = document.getElementById("franceModal");
     const franceImg = document.getElementById("franceImg");
 
-    franceImg.src = `gatito.jpg`;
+    franceImg.src = `img/gatito.jpg`;
     franceModal.classList.remove("hidden");
 
     setTimeout(() => {
