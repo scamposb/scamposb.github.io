@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   
-    fetch("${SERVER_URL}/polls")
+    fetch(`${SERVER_URL}/polls`)
       .then((res) => res.json())
       .then((data) => {
         const polls = data.polls;

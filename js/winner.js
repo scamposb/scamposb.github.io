@@ -15,7 +15,7 @@ const rankingList = document.getElementById('ranking-list');
     let winnerData = null;
 
     // Poblar el selector con los años disponibles
-    fetch("${SERVER_URL}/polls")
+    fetch(`${SERVER_URL}/polls`)
       .then(res => res.json())
       .then(data => {
         const years = Object.keys(data.polls).sort().reverse();
@@ -33,7 +33,7 @@ const rankingList = document.getElementById('ranking-list');
       selectedYear = yearSelect.value;
       if (!selectedYear) return;
 
-      fetch("${SERVER_URL}/polls")
+      fetch(`${SERVER_URL}/polls`)
         .then(res => res.json())
         .then(data => {
           const isOpen = data.polls[selectedYear]?.isOpen;
