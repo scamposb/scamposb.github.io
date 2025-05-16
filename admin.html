@@ -28,6 +28,7 @@
     <div class="flex flex-wrap gap-4 justify-center mb-6">
       <button id="manage-votes-btn" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded font-semibold">Gestionar votaciones</button>
       <button id="add-results-btn" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded font-semibold">Añadir resultados</button>
+      <button id="add-year-btn" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded font-semibold">Añadir nuevo año</button>
     </div>
 
     <!-- Sección de gestión de votaciones -->
@@ -75,6 +76,18 @@
         <div id="result-msg" class="text-green-400 font-semibold hidden mt-2"></div>
       </form>
     </section>
+
+    <!-- Sección de crear nuevo año -->
+    <section id="add-year-section" class="hidden w-full max-w-md bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
+      <h2 class="text-xl font-bold mb-4">Añadir nuevo año</h2>
+      <form id="new-year-form" class="flex gap-2 items-center">
+        <input type="number" id="new-year-input" placeholder="Ej: 2026" required class="flex-1 p-2 rounded text-black" />
+        <button type="submit" class="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-4 py-2 rounded">Añadir</button>
+      </form>
+      <div id="new-year-msg" class="mt-2 text-sm font-semibold"></div>
+    </section>
+
+
   </main>
 
     <!-- Modal de error -->
