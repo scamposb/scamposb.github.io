@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   
-    fetch("https://euroviapp-production.up.railway.app/polls")
+    fetch("${SERVER_URL}/polls")
       .then((res) => res.json())
       .then((data) => {
         const polls = data.polls;

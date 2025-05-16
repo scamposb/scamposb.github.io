@@ -48,7 +48,7 @@ function handleSubmit(event) {
     favourite: favouriteRaw,
   };
 
-  const url = `https://euroviapp-production.up.railway.app/bet/${year}/${encodeURIComponent(nombre)}`;
+  const url = `${SERVER_URL}/bet/${year}/${encodeURIComponent(nombre)}`;
 
 
 

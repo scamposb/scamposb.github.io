@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .filter(Boolean);
 
     try {
-      const response = await fetch(`https://euroviapp-production.up.railway.app/result/${year}`, {
+      const response = await fetch(`${SERVER_URL}/result/${year}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultMsg.classList.add('text-red-400');
       }
     } catch (error) {
-      resultMsg.textContent = 'Error de conexión con el servidor';
+      resultMsg.textContent = 'Error de conexión con el servidor: '+error.message;
       resultMsg.classList.remove('hidden', 'text-green-400');
       resultMsg.classList.add('text-red-400');
     }
@@ -115,28 +115,51 @@ document.addEventListener('DOMContentLoaded', () => {
       betsContainer.classList.remove("hidden");
   
       sortedBets.forEach(([name, bet]) => {
-    //   betsEntries.forEach(([name, bet]) => {
         const div = document.createElement("div");
-        div.className = "bg-white/10 border border-white/20 rounded p-4";
+        div.className = "relative bg-white/10 border border-white/20 rounded p-4";
+
         div.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-            <p><strong>${name}</strong></p>
-            <p class="text-xs text-gray-300">${new Date(bet.timestamp).toLocaleString()}</p>
-        </div>
-        <p>Ganador: ${bet.winner}</p>
-        <p>Último: ${bet.lastPlace}</p>
-        <p>España: ${bet.spain}</p>
-        <p>Mitad tabla: ${bet.halfTable === 1 ? "Primera" : "Segunda"}</p>
-        <p>Favorito: ${bet.favourite}</p>
+          <button class="absolute top-2 right-2 text-sm text-red-400 hover:text-red-600 font-bold delete-bet" title="Eliminar apuesta">✖</button>
+          <p class="text-center font-bold mb-2">${name}</p>
+          <div class="text-left space-y-1">
+            <p>Ganador: ${bet.winner}</p>
+            <p>Último: ${bet.lastPlace}</p>
+            <p>España: ${bet.spain}</p>
+            <p>Mitad tabla: ${bet.halfTable === 1 ? "Primera" : "Segunda"}</p>
+            <p>Favorito: ${bet.favourite}</p>
+          </div>
+          <p class="text-xs text-right text-gray-300 mt-2">${new Date(bet.timestamp).toLocaleString()}</p>
         `;
-        // Elimina esta línea si no necesitas mostrar en dos sitios:
-        // resultsContainer.appendChild(div);
+
+        div.dataset.name = name;
         betsList.appendChild(div);
-      });
+
+        div.querySelector('.delete-bet').addEventListener('click', async () => {
+          const confirmed = confirm(`¿Estás seguro de que deseas borrar la apuesta de "${name}" del año ${yearSelect.value}?`);
+          if (!confirmed) return;
+
+          try {
+            const res = await fetch(`${SERVER_URL}/bet/${yearSelect.value}/${encodeURIComponent(name)}`, {
+              method: 'DELETE'
+            });
+
+            if (res.ok) {
+              div.remove();
+            } else {
+              const errText = await res.text();
+              showModal(`❌ Error al borrar la apuesta: ${errText || res.status}`);
+            }
+          } catch (err) {
+            showModal(`❌ Error de conexión: ${err.message}`);
+          }
+        });
+});
+
+
     }
   
     function fetchAllPollsAndDisplay(year) {
-      fetch(`https://euroviapp-production.up.railway.app/polls`)
+      fetch(`${SERVER_URL}/polls`)
         .then((res) => res.json())
         .then((data) => {
           pollsData = data.polls || {};
@@ -176,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const newState = toggleButton.dataset.open === "true" ? false : true;
   
-      fetch(`https://euroviapp-production.up.railway.app/poll/${year}/is-open`, {
+      fetch(`${SERVER_URL}/poll/${year}/is-open`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
