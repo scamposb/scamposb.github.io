@@ -17,11 +17,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const message = document.getElementById("message");
   const betsList = document.getElementById("bets-list");
   const betsContainer = document.getElementById("bets-results");
+  const errorModal = document.getElementById("error-modal");
+  const errorModalMessage = document.getElementById("error-modal-message");
+  const closeModalBtn = document.getElementById("close-modal");
 
-  if (!manageVotesBtn || !addResultsBtn || !voteSection || !addResultSection || !form || !resultMsg) {
-    console.error('Uno o más elementos no se encontraron en el DOM.');
-    return;
+  let pollsData = {};
+  let messageTimeout;
+
+  function clearMessage() {
+    message.textContent = "";
+    message.className = "";
+    if (messageTimeout) clearTimeout(messageTimeout);
   }
+
+  function showErrorModal(msg) {
+    errorModalMessage.textContent = msg;
+    errorModal.classList.remove("hidden");
+  }
+
+  closeModalBtn.addEventListener("click", () => {
+    errorModal.classList.add("hidden");
+  });
 
   manageVotesBtn.addEventListener('click', () => {
     voteSection.classList.remove('hidden');
@@ -59,8 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (response.ok) {
         newYearMsg.textContent = '✅ Año añadido correctamente';
         newYearMsg.className = 'text-green-400 mt-2';
-
-        // Opcional: añadir al selector de años automáticamente
         const option = document.createElement('option');
         option.value = year;
         option.textContent = year;
@@ -112,14 +126,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  let pollsData = {};
-  let messageTimeout;
+  function createBetElement(name, bet, year) {
+  const div = document.createElement("div");
+  div.className = "bg-white/10 border border-white/20 rounded p-4 relative";
 
-  function clearMessage() {
-    message.textContent = "";
-    message.className = "";
-    if (messageTimeout) clearTimeout(messageTimeout);
-  }
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "✖";
+  deleteBtn.className = "absolute top-2 right-2 text-red-400 hover:text-red-600 text-sm font-bold";
+  deleteBtn.title = "Eliminar apuesta";
+
+  deleteBtn.addEventListener("click", async () => {
+    const confirmed = confirm(`¿Estás seguro de que deseas eliminar la apuesta de "${name}" del año ${year}?`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`${SERVER_URL}/bet/${year}/${encodeURIComponent(name)}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        div.remove();
+      } else {
+        const errorText = await response.text();
+        showErrorModal(`Error al eliminar apuesta: ${errorText}`);
+      }
+    } catch (err) {
+      showErrorModal(`Error de red al eliminar apuesta: ${err.message}`);
+    }
+  });
+
+  div.innerHTML = `
+    <div class="flex justify-between items-start mb-2">
+      <p class="text-center font-bold w-full">${name}</p>
+    </div>
+    <div class="text-left space-y-1">
+      <p>Ganador: ${bet.winner}</p>
+      <p>Último: ${bet.lastPlace}</p>
+      <p>España: ${bet.spain}</p>
+      <p>Mitad tabla: ${bet.halfTable === 1 ? "Primera" : "Segunda"}</p>
+      <p>Favorito: ${bet.favourite}</p>
+    </div>
+    <div class="text-right text-xs text-gray-300 mt-2">
+      ${new Date(bet.timestamp).toLocaleString()}
+    </div>
+  `;
+  div.appendChild(deleteBtn);
+  return div;
+}
+
 
   function displayPollData(year) {
     const poll = pollsData[year];
@@ -151,24 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     betsContainer.classList.remove("hidden");
 
     sortedBets.forEach(([name, bet]) => {
-      const div = document.createElement("div");
-      div.className = "bg-white/10 border border-white/20 rounded p-4";
-      div.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-          <p class="text-center font-bold w-full">${name}</p>
-        </div>
-        <div class="text-left space-y-1">
-          <p>Ganador: ${bet.winner}</p>
-          <p>Último: ${bet.lastPlace}</p>
-          <p>España: ${bet.spain}</p>
-          <p>Mitad tabla: ${bet.halfTable === 1 ? "Primera" : "Segunda"}</p>
-          <p>Favorito: ${bet.favourite}</p>
-        </div>
-        <div class="text-right text-xs text-gray-300 mt-2">
-          ${new Date(bet.timestamp).toLocaleString()}
-        </div>
-      `;
-      betsList.appendChild(div);
+      const betElement = createBetElement(name, bet, year);
+      betsList.appendChild(betElement);
     });
   }
 
@@ -179,16 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pollsData = data.polls || {};
         displayPollData(year);
       });
-  }
-
-  function updatePollStatus(year) {
-    const poll = pollsData[year];
-    if (!poll) return;
-
-    isOpenStatus.textContent = poll.isOpen ? "✅ Abierta" : "❌ Cerrada";
-    isOpenStatus.className = poll.isOpen ? "text-green-400 font-bold" : "text-red-400 font-bold";
-    toggleButton.textContent = poll.isOpen ? "Cerrar votación" : "Abrir votación";
-    toggleButton.dataset.open = poll.isOpen;
   }
 
   yearSelect.addEventListener("change", () => {
